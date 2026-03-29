@@ -8,34 +8,28 @@ on:
       - "images/**"
 
 jobs:
-  detect-changes:
+  detect-images:
     runs-on: ubuntu-latest
     outputs:
-      versions: ${{ steps.changed.outputs.versions }}
+      versions: ${{ steps.list.outputs.versions }}
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+      - uses: actions/checkout@v6
 
-      - name: Get changed image versions
-        id: changed
+      - name: List image versions
+        id: list
         run: |
-          VERSIONS=$(git diff --name-only HEAD~1 HEAD -- images/ \
-            | cut -d'/' -f2 \
-            | sort -u \
-            | jq -R . | jq -sc .)
+          VERSIONS=$(ls images/ | jq -R . | jq -sc .)
           echo "versions=$VERSIONS" >> $GITHUB_OUTPUT
 
   build-and-push-image:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.versions != '[]'
+    needs: detect-images
     runs-on: ubuntu-latest
     permissions:
       packages: write
     strategy:
       matrix:
-        version: ${{ fromJson(needs.detect-changes.outputs.versions) }}
+        version: ${{ fromJson(needs.detect-images.outputs.versions) }}
 
     steps:
       - uses: actions/checkout@v6
@@ -57,49 +51,3 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ env.REPO_OWNER }}/entorno-devcontainers:${{ matrix.version }}
-            ghcr.io/${{ env.REPO_OWNER }}/entorno-devcontainers:latest
-
-  open-release-pr:
-    needs: [detect-changes, build-and-push-image]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-    strategy:
-      matrix:
-        version: ${{ fromJson(needs.detect-changes.outputs.versions) }}
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Set lowercase repository owner
-        run: echo "REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
-
-      - name: Update template defaults
-        env:
-          REPO_OWNER: ${{ env.REPO_OWNER }}
-          IMAGE_VERSION: ${{ matrix.version }}
-        run: |
-          sed -i "s|^FROM ghcr.io/.*/entorno-devcontainers:.*$|FROM ghcr.io/${REPO_OWNER}/entorno-devcontainers:${IMAGE_VERSION}|g" templates/devcontainer/.devcontainer/Dockerfile
-
-      - name: Create release PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMAGE_VERSION: ${{ matrix.version }}
-        run: |
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git config user.name "github-actions[bot]"
-
-          branch="release/$IMAGE_VERSION-$GITHUB_RUN_ID"
-          git checkout -b "$branch"
-          git add templates/devcontainer/.devcontainer/Dockerfile
-          git commit -m "chore: release $IMAGE_VERSION" || export NO_UPDATES=true
-
-          if [ "$NO_UPDATES" != "true" ]; then
-            git push origin "$branch"
-            gh pr create \
-              --title "chore: release $IMAGE_VERSION" \
-              --body "Bumps devcontainer template to image \`ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/entorno-devcontainers:$IMAGE_VERSION\`." \
-              --base main \
-              --head "$branch"
-          fi
