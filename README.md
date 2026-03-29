@@ -18,3 +18,7 @@ simplemente hay que:
 
 Se va a crear una carpeta `.devcontainer` con un `Dockerfile` y un `devcontainer.json`. Es necesario
 pushear ambos archivos al repositorio para que Codespaces lo utilice para construir el container.
+
+## Contributors
+
+- Agustín Ranieri [@RaniAgus](https://github.com/RaniAgus)

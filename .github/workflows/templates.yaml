@@ -1,11 +1,6 @@
 name: "Publish Dev Container templates"
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "templates/**"
   workflow_dispatch:
 
 jobs:
