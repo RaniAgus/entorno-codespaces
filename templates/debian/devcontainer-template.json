@@ -1,10 +1,17 @@
 {
-  "id": "devcontainer",
+  "id": "debian",
   "version": "0.1.0",
   "name": "SisOp Dev Container Template",
   "description": "Entorno de desarrollo para la materia Sistemas Operativos (UTN FRBA). Basado en Ubuntu con herramientas C, GDB y Valgrind.",
   "publisher": "RaniAgus",
   "platforms": ["C"],
   "keywords": ["ubuntu", "c", "gdb", "valgrind", "utn", "sistemas-operativos"],
-  "options": {}
+  "options": {
+    "imageVersion": {
+      "type": "string",
+      "description": "Base image version",
+      "proposals": ["ubuntu-22.04"],
+      "default": "ubuntu-22.04"
+    }
+  }
 }

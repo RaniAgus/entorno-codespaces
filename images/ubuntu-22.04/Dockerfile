@@ -18,6 +18,7 @@ RUN apt-get install -y \
     autotools-dev \
     build-essential \
     cmake \
+    ninja-build \
     pkg-config \
     g++ \
     gcc \
