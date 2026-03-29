@@ -22,7 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION=$(jq -r '.version' templates/debian/devcontainer-template.json)
+          VERSION=$(jq -r '.version' templates/ubuntu/devcontainer-template.json)
           STATUS=$(gh api /orgs/${GITHUB_REPOSITORY_OWNER}/packages/container/entorno-devcontainers-templates/versions \
             --jq "[.[].metadata.container.tags[] | select(. == \"$VERSION\")] | length" 2>/dev/null \
             || gh api /users/${GITHUB_REPOSITORY_OWNER}/packages/container/entorno-devcontainers-templates/versions \

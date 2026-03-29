@@ -50,4 +50,4 @@ jobs:
           context: images/${{ matrix.version }}
           push: true
           tags: |
-            ghcr.io/${{ env.REPO_OWNER }}/entorno-devcontainers:${{ matrix.version }}
+            ghcr.io/${{ env.REPO_OWNER }}/entorno-docker:${{ matrix.version }}
