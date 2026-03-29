@@ -3,21 +3,29 @@
 Entorno de desarrollo para la materia Sistemas Operativos (UTN FRBA). Basado en Ubuntu con
 herramientas C, GDB y Valgrind.
 
-## Uso
+<img width="1350" height="910" alt="image" src="https://github.com/user-attachments/assets/7f3e8b27-4c87-4e51-b131-649e833dac45" />
 
-Para agregarlo al repositorio, luego de instalar la extensión de
-[Dev Containers](https://code.visualstudio.com/docs/remote/containers) en Visual Studio Code,
-simplemente hay que:
+## Setup
 
-1. Abrir la carpeta del proyecto
-2. Hacer click en el icono de abajo a la izquierda
-3. Seleccionar `Add Dev Container Configuration Files...`.
-4. Elegir la opción `Add configuration to workspace`.
-5. Ingresar `ghcr.io/sisoputnfrba/entorno-docker/devcontainer`
-6. Hacer click en OK
+Para agregarlo al repositorio, simplemente hay que:
+
+1. Instalar la extensión de
+[Dev Containers](https://code.visualstudio.com/docs/remote/containers)
+2. Abrir la carpeta del proyecto
+3. Hacer click en el icono de abajo a la izquierda
+4. Seleccionar `Add Dev Container Configuration Files...`.
+5. Elegir la opción `Add configuration to workspace`.
+6. Ingresar `ghcr.io/sisoputnfrba/entorno-docker/devcontainer`
+7. Hacer click en OK
 
 Se va a crear una carpeta `.devcontainer` con un `Dockerfile` y un `devcontainer.json`. Es necesario
 pushear ambos archivos al repositorio para que Codespaces lo utilice para construir el container.
+
+## Uso
+
+Para utilizar el devcontainer debemos crear un GitHub Codespace desde el repositorio y conectarnos
+a él, ya sea desde el propio browser o desde Visual Studio Code desktop mediante la opción
+`Connect to Codespace...`
 
 ## Contributors
 
