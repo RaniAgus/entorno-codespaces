@@ -18,6 +18,20 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Check template version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(jq -r '.version' templates/devcontainer/devcontainer-template.json)
+          STATUS=$(gh api /orgs/${GITHUB_REPOSITORY_OWNER}/packages/container/entorno-devcontainers-templates/versions \
+            --jq "[.[].metadata.container.tags[] | select(. == \"$VERSION\")] | length" 2>/dev/null \
+            || gh api /users/${GITHUB_REPOSITORY_OWNER}/packages/container/entorno-devcontainers-templates/versions \
+            --jq "[.[].metadata.container.tags[] | select(. == \"$VERSION\")] | length")
+          if [ "$STATUS" != "0" ]; then
+            echo "Version $VERSION already exists, bump the version in devcontainer-template.json"
+            exit 1
+          fi
+
       - name: Publish devcontainer template
         uses: devcontainers/action@v1
         with:
