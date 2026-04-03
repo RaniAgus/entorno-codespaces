@@ -36,3 +36,4 @@ a él, ya sea desde el propio browser o desde Visual Studio Code desktop mediant
 ## Contributors
 
 - Agustín Ranieri [@RaniAgus](https://github.com/RaniAgus)
+- Juan Mesaglio [@mesaglio](https://github.com/mesaglio)
